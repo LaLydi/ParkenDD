@@ -19,8 +19,10 @@ class MapViewController: UIViewController, MKMapViewDelegate {
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-
-		mapView?.showsUserLocation = true
+        
+        if Location.authState == .authorizedWhenInUse {
+            mapView?.showsUserLocation = true
+        }
 		
 		if #available(iOS 9, *) {
 			mapView?.showsTraffic = true
@@ -60,6 +62,12 @@ class MapViewController: UIViewController, MKMapViewDelegate {
 			navigationItem.rightBarButtonItem = UIBarButtonItem(title: L10n.forecast.string, style: .plain, target: self, action: #selector(MapViewController.showForecastController))
 		}
 	}
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        Location.manager.requestWhenInUseAuthorization()
+    }
 	
 	/**
 	Transition to forecast controller
